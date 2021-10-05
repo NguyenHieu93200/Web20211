@@ -1,0 +1,24 @@
+<html lang="en">
+<head>
+    <title>Form for hobby</title>
+</head>
+<body>
+    <form action="ex_lab2.php" method="POST">
+        <br>
+        Hello <input type="text" size="16" maxlength="20" name="user_name"></br>
+        <br></br>
+        You are styding at class:<input type="text"size="16" maxlength="20" name="class"> university:<input type="text"size="16" maxlength="20" name="university"></br>
+        <br></br>
+        Your hobby is:
+        <br>
+        <input type="checkbox" id="hobby1" name="hobby[]" value="Eating">
+        <label for="hobby1"> Eating</label><br>
+        <input type="checkbox" id="hobby2" name="hobby[]" value="Playing video games">
+        <label for="hobby2"> Playing video games</label><br>
+        <input type="checkbox" id="hobby3" name="hobby[]" value="Watching movie">
+        <label for="hobby3"> Watching movie</label>
+        <br></br>
+        <input type="submit" value="Submit" name="submit">
+    </form>
+</body>
+</html>
