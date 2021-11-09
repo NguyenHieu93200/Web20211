@@ -1,63 +1,78 @@
-<?php
-$servername = "localhost";
-$username = "hieu";
-$password = "932000";
-$dbname = "weblearning";
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-//echo "Connected successfully";
+<html>
 
-$sql = "SELECT CatID, Title,Description FROM lab06_ex1";
-$result = $conn->query($sql);
+<head>
+    <title>Category Administration</title>
+</head>
 
-if (isset($_POST["submit"])) {
-    $catID = $_POST["catID"];
-    $title = $_POST["title"];
-    $description = $_POST["description"];
-    $sql = "INSERT INTO lab06_ex1 (CatID, Title, Description) VALUES " . "(" . "'".$catID . "'," . "'". $title. "',"  .  "'".$description . "')";
-    if ($conn->query($sql) === TRUE) {
-        header("Refresh:0");
-        echo "New record created successfully";
-    } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
-    }
-}
+<body>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
 
-$conn->close();
-?>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
 
-<table>
-    <tr>
-        <th>CatID</th>
-        <th>Title</th>
-        <th>Description</th>
-    <tr>
+        th {
+            background-color: grey;
+        }
+    </style>
+    <h1>Category Administration</h1>
+    <table>
+        <tr>
+            <th>Cat ID</th>
+            <th>Title</th>
+            <th>Description</th>
+        </tr>
         <?php
-        if ($result->num_rows > 0) {
-            // output data of each row
-            while ($row = $result->fetch_assoc()) {
-                print("<tr>");
-                print("<th>$row[CatID]</th><th>$row[Title]</th><th>$row[Description]</th>");
-                print("</tr>");
+        $servername = "localhost";
+        $username = "hieu";
+        $password = "932000";
+        $dbname = "weblearning";
+        $mysqli = new mysqli($servername, $username, $password, $dbname);
+        if (!$mysqli) {
+            die("Cannot connect to $server using $user");
+        } else {
+            if (isset($_POST["submit"])) {
+                $category_id = $_POST["category_id"];
+                $title = $_POST["title"];
+                $description = $_POST["description"];
+                $insert = $mysqli->prepare("insert into $table_name values (?,?,?)");
+                $insert->bind_param("sss", $category_id, $title, $description);
+                if ($insert->execute()) {
+                    echo $mysqli->error;
+                };
             }
+            $select = "Select * from $table_name";
+            if ($result = $mysqli->query($select)) {
+                $categories = $result->fetch_all(MYSQLI_ASSOC);
+                foreach ($categories as $category) {
+                    echo "<tr>";
+                    foreach ($category as $key => $value) {
+                        echo "<td>$value</td>";
+                    }
+                    echo "</td>";
+                }
+            } else {
+                $categories = array();
+            }
+            $mysqli->close();
         }
         ?>
+        <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+            <tr>
+                <td><input type="text" size="10" name="category_id" required /></td>
+                <td><input type="text" size="50" name="title" required /></td>
+                <td><input type="text" size="100" name="description" required /></td>
+            </tr>
+            <tr>
+                <td><input type="submit" name="submit" value="Add category"></td>
+            </tr>
+        </form>
+    </table>
+</body>
 
-        <form action="admin.php" method="post">
-    <tr>
-        <th><input type="text" name="catID"></th>
-        <th><input type="text" name="title"></th>
-        <th><input type="text" name="description"></th>
-    </tr>
-    <tr>
-        <th>
-            <input type="submit" name="submit">
-        </th>
-    </tr>
-    </form>
-
-
-
-</table>
+</html>
